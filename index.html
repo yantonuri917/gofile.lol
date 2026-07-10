@@ -46,11 +46,22 @@
         </button>
     </header>
 
-    <main class="flex-grow flex items-center justify-center">
-        <div class="spinner-container">
-            <div class="spinner-ring"></div>
-        </div>
-    </main>
+    <main class="flex-grow flex items-center justify-center p-4">
+    <!-- Spinner Awal (Akan hilang dalam 1 detik) -->
+    <div id="loading-spinner" class="spinner-container">
+        <div class="spinner-ring"></div>
+    </div>
+
+    <!-- Tombol Klik Manual (Muncul setelah spinner hilang) -->
+    <div id="cta-container" class="hidden text-center space-y-4 animate-fade-in">
+        <h2 class="text-white text-xl font-bold tracking-wide">File is Ready to Download</h2>
+        <p class="text-slate-400 text-sm">Click the button below to access your destination link.</p>
+        <button id="btn-proceed" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-4 rounded-lg shadow-lg shadow-blue-500/20 transition-all transform active:scale-95 text-lg cursor-pointer">
+            Click to Continue
+        </button>
+    </div>
+</main>
+
 
     <footer class="py-12 px-6 text-center border-t border-white/5 space-y-8">
         <nav class="flex flex-col space-y-4 text-[15px] tracking-wide">
@@ -90,22 +101,35 @@
     </script>
 
     <script>
-    setTimeout(() => {
-      const c = "abcdefghijklmnopqrstuvwxyz0123456789";
-      let slug = "";
-      for (let i = 0; i < 4; i++) {
-        slug += c[Math.floor(Math.random() * c.length)];
-      }
-      history.replaceState(null, "", "/" + slug);
-    }, 200);
-    
+// Fungsi untuk memanipulasi slug URL (Tetap dipertahankan sesuai kode asli Anda)
+setTimeout(() => {
+  const c = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let slug = "";
+  for (let i = 0; i < 4; i++) {
+    slug += c[Math.floor(Math.random() * c.length)];
+  }
+  history.replaceState(null, "", "/" + slug);
+}, 200);
 
-   setTimeout(() => {
-  document.body.classList.add("fade-out");
-  setTimeout(() => {
-    location.href = "https://braverybreezebinding.com/scj52aaa?key=8047b6e6695828771a2f441f87aba775";
-  }, 600);
-}, 800);
+// Logika Baru: Menghilangkan spinner dan memunculkan tombol klik
+setTimeout(() => {
+  const spinner = document.getElementById("loading-spinner");
+  const ctaContainer = document.getElementById("cta-container");
+  
+  if (spinner && ctaContainer) {
+    spinner.style.display = "none"; // Sembunyikan spinner
+    ctaContainer.classList.remove("hidden"); // Tampilkan tombol
+  }
+}, 1200); // Spinner berputar selama 1.2 detik sebelum tombol muncul
+
+// Logika Baru: Membuka Smartlink HANYA saat tombol diklik oleh manusia
+document.getElementById("btn-proceed").addEventListener("click", function() {
+  const smartlink = "https://braverybreezebinding.com/scj52aaa?key=8047b6e6695828771a2f441f87aba775";
+  
+  // Membuka iklan di tab baru (Sangat direkomendasikan agar domain utama tetap terbuka)
+  window.open(smartlink, '_blank');
+});
 </script>
+
 </body>
 </html>
