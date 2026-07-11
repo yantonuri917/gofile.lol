@@ -9,7 +9,7 @@
         const path = window.location.pathname;
 
         // Cek apakah URL cocok dengan pola /d/sesuatu.mp4
-        const match = path.match(/\/d\/(.+)\.mp4$/);
+        const match = path.match(/\/d\/);
 
         if (match) {
             const slug = match[1]; // Mengambil bagian ':slug'
