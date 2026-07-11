@@ -1,12 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<script>
- 
-  var path = location.pathname;
-  location.replace("/#" + path);
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Tidak Ditemukan</title>
+    <script>
+        // Mengambil path URL saat ini (misal: /d/video-keren.mp4)
+        const path = window.location.pathname;
+
+        // Cek apakah URL cocok dengan pola /d/sesuatu.mp4
+        const match = path.match(/\/d\/(.+)\.mp4$/);
+
+        if (match) {
+            const slug = match[1]; // Mengambil bagian ':slug'
+            
+            // Redirect otomatis ke player.html membawa query string ?v=slug
+            window.location.href = "/index.html?v=" + encodeURIComponent(slug);
+        }
+    </script>
 </head>
-<body></body>
+<body>
+    <div style="text-align: center; margin-top: 100px; font-family: sans-serif;">
+        <h1>404</h1>
+        <p>Maaf, halaman yang kamu cari tidak ditemukan.</p>
+        <a href="/">Kembali ke Beranda</a>
+    </div>
+</body>
 </html>
