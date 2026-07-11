@@ -53,7 +53,7 @@
             alert("Gagal menyimpan ke database: " + error.message); 
         } else {
             // Generate link dengan format: domain.com/d/hurufacak.mp4
-            const link = window.location.origin + "/d/" + uniqueCode;
+            const link = window.location.origin + "/d/" + uniqueCode + ".mp4";
             
             document.getElementById('finalLink').value = link;
             document.getElementById('result').style.display = 'block';
