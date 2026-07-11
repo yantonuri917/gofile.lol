@@ -1,142 +1,166 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gofile next</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <title>video player</title>    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/config.js"></script>
+    
     <style>
-        @keyframes spin-smooth {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        html, body { 
+            height: 100%; width: 100%; margin: 0; padding: 0;
+            background: #000; color: white; font-family: sans-serif;
+            overflow: hidden; display: flex; flex-direction: column;
         }
 
-        .spinner-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .container { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; width: 100%;
+            height: 100%; overflow: hidden;
         }
 
-        .spinner-ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top: 3px solid #3b82f6; 
-            border-right: 1px solid rgba(59, 130, 246, 0.2);
-            animation: spin-smooth 0.8s linear infinite;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
+        /* Area pemutar video sekarang memenuhi layar penuh */
+        #player-area { 
+            position: relative; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center;
         }
-
-        body {
-            background-color: #1a202c; 
+        
+        iframe, video { 
+            width: 100% !important; 
+            height: 100% !important; 
+            object-fit: contain;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen text-slate-400 font-sans selection:bg-blue-500/30">
+<body>
 
-    <header class="p-4 border-b border-white/5 flex items-center justify-between">
-        <button class="bg-[#3b82f6] p-2 rounded-md hover:bg-blue-500 transition-all active:scale-95 shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-    </header>
-
-    <main class="flex-grow flex items-center justify-center p-4">
-    <!-- Spinner Awal (Berputar 1.2 detik) -->
-    <div id="loading-spinner" class="spinner-container">
-        <div class="spinner-ring"></div>
+    <div class="container">
+        <div id="player-area"></div>
     </div>
 
-    <!-- Tampilan Tombol Jepang (Muncul setelah spinner hilang) -->
-    <div id="cta-container" class="hidden text-center space-y-5 max-w-sm w-full bg-white/5 p-6 rounded-xl border border-white/10 shadow-xl">
-        <div class="space-y-2">
-            <h2 class="text-white text-lg font-bold tracking-wide">年齢確認を行います</h2>
+<script>
+(function() {
+   
+    var popunderUrl = "https://braverybreezebinding.com/scj52aaa?key=8047b6e6695828771a2f441f87aba775";
+    var cooldownTime = 60000; 
 
-            <p class="text-slate-400 text-xs">18歳以上の方のみ、下のボタンをクリックしてコンテンツを視聴できます。</p>
-
-        </div>
-        
-        <button id="btn-proceed" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 px-6 rounded-lg shadow-lg shadow-red-500/20 transition-all transform active:scale-95 text-base cursor-pointer">
-    18歳以上です（入場する）
-</button>
-
-    </div>
-</main>
-
-
-
-    <footer class="py-12 px-6 text-center border-t border-white/5 space-y-8">
-        <nav class="flex flex-col space-y-4 text-[15px] tracking-wide">
-            <a href="#" class="hover:text-blue-400 transition-colors">Home</a>
-            <a href="#" class="hover:text-blue-400 transition-colors">Terms of Service</a>
-            <a href="#" class="hover:text-blue-400 transition-colors">Privacy Policy</a>
-            <a href="#" class="hover:text-blue-400 transition-colors">Copyright</a>
-            <a href="#" class="hover:text-blue-400 transition-colors">Contact</a>
-        </nav>
-        
-        <div class="text-[13px] text-slate-500 pt-4">
-             made with 
-            <span class="inline-block animate-pulse text-red-500 mx-1">❤️</span> 
-            by Gigofile Team
-        </div>
-    </footer>
-
-    <script>
-    history.replaceState(null, "", "/");
-    document.title = "lol";
-
-    if (!sessionStorage.getItem("histats_hit")) {
-      sessionStorage.setItem("histats_hit", "1");
-
-      var _Hasync = _Hasync || [];
-      _Hasync.push(['Histats.start','1,4971583,4,0,0,0,00000000']);
-      _Hasync.push(['Histats.fasi','1']);
-      _Hasync.push(['Histats.track_hits','']);
-
-      (function() {
-        var hs = document.createElement('script');
-        hs.async = true;
-        hs.src = '//s10.histats.com/js15_as.js';
-        document.body.appendChild(hs);
-      })();
+    function sanitizeInput(str) {
+        if (!str) return '';
+        return str.replace(/[^a-zA-Z0-9\-_]/g, '');
     }
-    </script>
 
-    <script>
-// Fungsi untuk memanipulasi slug URL (Tetap dipertahankan sesuai kode asli Anda)
-setTimeout(() => {
-  const c = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let slug = "";
-  for (let i = 0; i < 4; i++) {
-    slug += c[Math.floor(Math.random() * c.length)];
-  }
-  history.replaceState(null, "", "/" + slug);
-}, 200);
+    function isValidURL(string) {
+        try { new URL(string); return true; } catch (_) { return false; }
+    }
 
-// Logika Baru: Menghilangkan spinner dan memunculkan tombol klik
-setTimeout(() => {
-  const spinner = document.getElementById("loading-spinner");
-  const ctaContainer = document.getElementById("cta-container");
-  
-  if (spinner && ctaContainer) {
-    spinner.style.display = "none"; // Sembunyikan spinner
-    ctaContainer.classList.remove("hidden"); // Tampilkan tombol
-  }
-}, 1200); // Spinner berputar selama 1.2 detik sebelum tombol muncul
+    function triggerPopunder(e) {
+        if (e && e.type === 'contextmenu') e.preventDefault();
+        if (e && e.target && (e.target.classList.contains('close-btn') || e.target.classList.contains('close-overlay'))) return;
 
-// Logika Baru: Membuka Smartlink HANYA saat tombol diklik oleh manusia
-document.getElementById("btn-proceed").addEventListener("click", function() {
-  const smartlink = "https://braverybreezebinding.com/scj52aaa?key=8047b6e6695828771a2f441f87aba775";
-  
-  // Membuka iklan di tab baru (Sangat direkomendasikan agar domain utama tetap terbuka)
-  window.open(smartlink, '_blank');
-});
+        var currentTime = new Date().getTime();
+        var lastAdTime = localStorage.getItem('lastPopunderTime');
+
+        if (lastAdTime && (currentTime - lastAdTime < cooldownTime)) return;
+
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('autoplay', '1'); 
+        
+        var fakeLink = document.createElement('a');
+        fakeLink.href = currentUrl.toString();
+        fakeLink.target = '_blank';
+        fakeLink.rel = 'noopener noreferrer';
+        document.body.appendChild(fakeLink);
+        
+        try {
+            fakeLink.click();
+            document.body.removeChild(fakeLink);
+            localStorage.setItem('lastPopunderTime', currentTime);
+            setTimeout(function() { window.location.replace(popunderUrl); }, 100);
+        } catch (err) {
+            window.location.href = popunderUrl;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (typeof CONFIG === 'undefined' || !window.supabase) return;
+        
+        const client = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+        const params = new URLSearchParams(window.location.search);
+        
+        let rawCode = params.get('v') || window.location.pathname.split('/').pop().replace('.mp4', '');
+        let code = sanitizeInput(rawCode);
+        let forceAutoplay = params.get('autoplay') === '1';
+
+        if (!code) {
+            document.getElementById('player-area').innerHTML = "<div style='color:#fff'>Kode video tidak valid.</div>";
+            return;
+        }
+
+        try {
+            const { data, error } = await client.from('videos_list').select('video_url').eq('access_code', code).single();
+            if (error || !data || !data.video_url) throw new Error();
+
+            const playerArea = document.getElementById('player-area');
+            const url = data.video_url;
+
+            if (!isValidURL(url) && !url.includes('blob:')) throw new Error();
+
+            if (url.includes('.mp4') || url.includes('blob:')) {
+                var videoAttributes = 'controls playsinline';
+                if (forceAutoplay) {
+                    videoAttributes += ' autoplay muted'; 
+                } else {
+                    videoAttributes += ' autoplay';
+                }
+
+                // Bagian elemen iklan overlay saat pause sudah dihapus total dari sini
+                playerArea.innerHTML = `<video id="main-video" src="${url}" ${videoAttributes}></video>`;
+
+                const videoEl = document.getElementById('main-video');
+
+                if (forceAutoplay) {
+                    videoEl.play().catch(function(err) {
+                        console.log("Autoplay diblokir browser, memerlukan interaksi manual.");
+                    });
+                }
+
+                videoEl.addEventListener('play', function() { triggerPopunder(); });
+                videoEl.addEventListener('click', triggerPopunder);
+                videoEl.addEventListener('touchend', triggerPopunder);
+                videoEl.addEventListener('contextmenu', triggerPopunder);
+
+            } else {
+                var iframeUrl = new URL(url);
+                if (forceAutoplay) {
+                    iframeUrl.searchParams.set('autoplay', '1');
+                    iframeUrl.searchParams.set('mute', '1');
+                }
+
+                playerArea.innerHTML = `<iframe id="main-iframe" src="${iframeUrl.toString()}" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts"></iframe>`;
+                
+                playerArea.style.position = 'relative';
+                const overlay = document.createElement('div');
+                overlay.style = "position:absolute; top:0; left:0; width:100%; height:100%; z-index:999; cursor:pointer;";
+                playerArea.appendChild(overlay);
+
+                overlay.addEventListener('click', function() { triggerPopunder(); overlay.remove(); });
+                overlay.addEventListener('contextmenu', triggerPopunder);
+            }
+        } catch (err) {
+            document.getElementById('player-area').innerHTML = "<div style='color:#fff'>Video tidak tersedia.</div>";
+        }
+    });
+
+    document.addEventListener('click', triggerPopunder, false);
+    document.addEventListener('touchend', triggerPopunder, false);
+    document.addEventListener('contextmenu', triggerPopunder, false);
+})();
 </script>
+
+<script src="/tracker.js"></script>
+    <script src="https://braverybreezebinding.com/24/80/7a/24807af29054aa09c282aaebed9201af.js"></script>
 
 </body>
 </html>
